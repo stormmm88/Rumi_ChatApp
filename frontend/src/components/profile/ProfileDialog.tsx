@@ -1,0 +1,74 @@
+import type { Dispatch, SetStateAction } from 'react'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog'
+import ProfileCard from './ProfileCard'
+import { useAuthStore } from '@/stores/useAuthStore'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
+
+interface ProfileDialogProps {
+  open: boolean
+  setOpen: Dispatch<SetStateAction<boolean>>
+}
+
+const ProfileDialog = ({ open, setOpen }: ProfileDialogProps) => {
+  const { user } = useAuthStore()
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent className="overflow-y-auto p-0 bg-transparent border-0 shadow-2xl">
+        <div className="bg-gradient-glass">
+          <div className="max-w-4xl mx-auto p-4">
+            {/* heading */}
+            <DialogHeader className="mb-6">
+              <DialogTitle className="text-2xl font-bold text-foreground">
+                Thông tin và cấu hình
+              </DialogTitle>
+            </DialogHeader>
+
+            {/* avatar và thông tin tóm tắt của người dùng */}
+            <ProfileCard user={user} />
+
+            {/* tabs */}
+            <Tabs defaultValue="personal" className="my-4">
+              <TabsList className="grid w-full grid-cols-3 glass-light">
+                <TabsTrigger
+                  value="personal"
+                  className="data-[state=active]:glass-strong"
+                >
+                  Tài khoản
+                </TabsTrigger>
+
+                <TabsTrigger
+                  value="preferences"
+                  className="data-[state=active]:glass-strong"
+                >
+                  Cấu hình
+                </TabsTrigger>
+
+                <TabsTrigger
+                  value="privacy"
+                  className="data-[state=active]:glass-strong"
+                >
+                  Cấu hình
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="personal">
+                {/* todo: form thông tin người dùng */}
+              </TabsContent>
+
+              <TabsContent value="preferences">
+                {/* todo: form cấu hình */}
+              </TabsContent>
+
+              <TabsContent value="privacy">
+                {/* todo: form luật lệ */}
+              </TabsContent>
+            </Tabs>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+export default ProfileDialog
