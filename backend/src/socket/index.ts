@@ -44,6 +44,15 @@ io.on("connection", async (socket) => {
     socket.join(conversationId);
   });
 
+  socket.on("user:status", ({ online }: { online: boolean }) => {
+    if (online) {
+      onlineUsers.set(user._id, socket.id);
+    } else {
+      onlineUsers.delete(user._id);
+    }
+    io.emit("online-users", Array.from(onlineUsers.keys()));
+  });
+
   //tại room theo user._id
   socket.join(user._id.toString());
 

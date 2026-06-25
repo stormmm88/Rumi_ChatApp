@@ -18,7 +18,7 @@ const InviteSuggestionList = ({
         <div
           key={friend._id}
           className="flex items-center gap-3 p-2 cursor-pointer hover: bg-muted 
-                transition"
+          transition"
           onClick={() => onSelect(friend)}
         >
           <UserAvatar

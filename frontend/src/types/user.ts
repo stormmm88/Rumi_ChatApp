@@ -36,3 +36,8 @@ export interface FriendRequest {
   createdAt: string
   updatedAt: string
 }
+
+export type UpdateUserPayload = Pick<
+  User,
+  'displayName' | 'username' | 'email' | 'phone' | 'bio'
+>

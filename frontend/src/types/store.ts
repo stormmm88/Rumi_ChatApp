@@ -1,6 +1,6 @@
 import type { Socket } from 'socket.io-client'
 import type { Conversation, Message } from './chat'
-import type { Friend, FriendRequest, User } from './user'
+import type { Friend, FriendRequest, UpdateUserPayload, User } from './user'
 
 export interface AuthState {
   accessToken: string | null
@@ -95,5 +95,8 @@ export interface FriendState {
 }
 
 export interface UserState {
+  onlineStatus: boolean
+  setOnlineStatus: (status: boolean) => void
   updateAvatarUrl: (formData: FormData) => Promise<void>
+  updateUserInfo: (userInfo: UpdateUserPayload) => Promise<void>
 }

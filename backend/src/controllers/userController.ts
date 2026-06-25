@@ -79,3 +79,37 @@ export const uploadAvatar = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "Upload failed" });
   }
 };
+
+//hàm cập nhật thông tin người dùng
+export const updateUserInfo = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user._id;
+    const { displayName, username, email, phone, bio } = req.body;
+
+    // Lọc bỏ các field undefined
+    const updateData = Object.fromEntries(
+      Object.entries({ displayName, username, email, phone, bio }).filter(
+        ([_, value]) => value !== undefined,
+      ),
+    );
+
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({ message: "Không có dữ liệu để cập nhật" });
+    }
+
+    const updatedUserInfo = await User.findByIdAndUpdate(
+      userId,
+      { $set: updateData }, // ✅ chỉ set field có giá trị
+      { new: true, runValidators: true },
+    ).select("displayName username email phone bio");
+
+    if (!updatedUserInfo) {
+      return res.status(404).json({ message: "Không tìm thấy người dùng" });
+    }
+
+    return res.status(200).json({ data: updatedUserInfo });
+  } catch (error) {
+    console.error("Lỗi khi update userInfo", error);
+    return res.status(500).json({ message: "Lỗi hệ thống" });
+  }
+};

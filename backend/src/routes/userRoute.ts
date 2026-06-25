@@ -2,6 +2,7 @@ import express from "express";
 import {
   authMe,
   searchUserByUsername,
+  updateUserInfo,
   uploadAvatar,
 } from "../controllers/userController";
 import { protectedRoute } from "../middlewares/authMiddleware";
@@ -17,5 +18,7 @@ router.get("/me", protectedRoute, authMe);
 router.get("/search", searchUserByUsername);
 
 router.post("/uploadAvatar", upload.single("file"), uploadAvatar);
+
+router.patch("/me", protectedRoute, updateUserInfo);
 
 export default router;

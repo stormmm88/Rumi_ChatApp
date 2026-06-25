@@ -65,9 +65,6 @@ const AddFriendModal = () => {
   const handleSend = handleSubmit(async (data) => {
     if (!searchUser) return
 
-    console.log('searchUser:', searchUser) // ← thêm dòng này
-    console.log('searchUser._id:', searchUser._id)
-
     try {
       const message = await addFriend(searchUser._id, data.message?.trim())
       toast.success(message)
