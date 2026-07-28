@@ -176,3 +176,66 @@ export const refresh = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "Lỗi hệ thống" });
   }
 };
+
+//hàm thay đổi mật khẩu
+export const changePassword = async (req: Request, res: Response) => {
+  try {
+    //lấy các giá trị đc gửi từ req.body
+    const { oldPassword, newPassword } = req.body;
+    const userId = req.user._id;
+    const currentRefreshToken = req.cookies.refreshToken;
+
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ message: "Không xác định được người dùng" });
+    }
+
+    //Kiểm tra có giá trị gửi lên không
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({ message: "Các field là bắt buộc" });
+    }
+
+    if (newPassword.length < 6) {
+      return res
+        .status(400)
+        .json({ message: "Mật khẩu phải có ít nhất 6 ký tự" });
+    }
+
+    //kiểm tra 2 giá trị có trùng nhau không
+    if (oldPassword === newPassword) {
+      return res
+        .status(400)
+        .json({ message: "Mật khẩu mới không được trùng mật khẩu cũ" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "Không tìm thấy người dùng" });
+    }
+
+    //dùng comapre của bcrypt So sánh mật khẩu cũ người dùng gửi lên với
+    //mật khẩu trong database
+    const passwordMatch = await bcrypt.compare(oldPassword, user.passwordHash);
+    if (!passwordMatch) {
+      return res.status(401).json({ message: "Sai thông tin xác thực" });
+    }
+
+    //mã hóa mật khấu mới
+    const newHashedPassword = await bcrypt.hash(newPassword, 10);
+    //gán lại mật khẩu mới cho người dùng
+    user.passwordHash = newHashedPassword;
+    await user.save();
+
+    // Xóa tất cả session khác, giữ lại session hiện tại
+    await Session.deleteMany({
+      userId: user._id,
+      refreshToken: { $ne: currentRefreshToken },
+    });
+
+    return res.status(200).json({ message: "Đổi mật khẩu thành công" });
+  } catch (error) {
+    console.error("Lỗi khi thay đổi mật khẩu", error);
+    return res.status(500).json({ message: "Lỗi hệ thống" });
+  }
+};

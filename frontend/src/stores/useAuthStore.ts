@@ -120,6 +120,26 @@ export const useAuthStore = create<AuthState>()(
           set({ loading: false })
         }
       },
+
+      changePassword: async (oldPassword, newPassword) => {
+        try {
+          set({ loading: true })
+          const { setAccessToken } = get()
+
+          await authService.changePassword(oldPassword, newPassword)
+          const { accessToken: newAccessToken } = await authService.refresh()
+          setAccessToken(newAccessToken)
+
+          toast.success('Đổi mật khẩu thành công')
+          return true
+        } catch (error) {
+          console.error(error)
+          toast.error('Đổi mật khẩu không thành công, vui lòng thử lại')
+          return false
+        } finally {
+          set({ loading: false })
+        }
+      },
     }),
     {
       name: 'auth-storage',

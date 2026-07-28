@@ -1,6 +1,8 @@
+import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import User from "../models/User";
 import { uploadImageFromBuffer } from "../middlewares/uploadMiddleware";
+import { Session } from "../models/Session";
 
 export const authMe = async (req: Request, res: Response) => {
   try {

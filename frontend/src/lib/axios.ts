@@ -15,7 +15,7 @@ api.interceptors.request.use((config) => {
   //nếu accessToken trong store thay đổi thì accessToken trong hàm này giữ nguyên
 
   if (accessToken) {
-    config.headers.Authorization = `Bear ${accessToken}`
+    config.headers.Authorization = `Bearer ${accessToken}`
   }
 
   return config
@@ -41,7 +41,7 @@ api.interceptors.response.use(
     if (error.response?.status === 403 && originalRequest._retryCount < 4) {
       originalRequest._retryCount += 1
       try {
-        const res = await api.post('auth/refresh', { withCridentials: true })
+        const res = await api.post('/auth/refresh', { withCredentials: true })
         const newAccessToken = res.data.accessToken
         useAuthStore.getState().setAccessToken(newAccessToken)
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`

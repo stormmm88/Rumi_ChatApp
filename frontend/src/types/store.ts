@@ -7,7 +7,7 @@ export interface AuthState {
   user: User | null
   loading: boolean
 
-  setAccessToken: (accessonToken: string) => void
+  setAccessToken: (accessToken: string) => void
   clearState: () => void
   setUser: (user: User) => void
 
@@ -23,6 +23,7 @@ export interface AuthState {
   signOut: () => Promise<void>
   fetchMe: () => Promise<void>
   refresh: () => Promise<void>
+  changePassword: (oldPassword: string, newPassword: string) => Promise<boolean>
 }
 
 export interface ThemeState {

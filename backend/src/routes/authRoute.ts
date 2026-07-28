@@ -4,7 +4,9 @@ import {
   signUp,
   signOut,
   refresh,
+  changePassword,
 } from "../controllers/authController";
+import { protectedRoute } from "../middlewares/authMiddleware";
 
 //tạo đối tượng router
 const router = express.Router();
@@ -20,5 +22,8 @@ router.post("/signout", signOut);
 
 //định nghĩa route refeshtoken
 router.post("/refresh", refresh);
+
+//định nghĩa route cho thay đổi mật khẩu
+router.patch("/change-password", protectedRoute, changePassword);
 
 export default router;
